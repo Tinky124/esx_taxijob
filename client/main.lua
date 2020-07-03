@@ -394,11 +394,14 @@ function OpenPutStocksMenu()
 	ESX.TriggerServerCallback('esx_taxijob:getPlayerInventory', function(inventory)
 		local elements = {}
 
-		for k,v in ipairs(inventory) do
-			table.insert(elements, {
-				label = v.label .. ' x' .. v.count,
+		for i=1, #inventory.items, 1 do
+			local item = inventory.items[i]
+
+			if item.count > 0 then
+				table.insert(elements, {
+				label = item.label .. ' x' .. item.count,
 				type = 'item_standard', -- not used
-				value = v.name
+				value = item.name
 			})
 		end
 
@@ -738,10 +741,5 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddEventHandler('esx:onPlayerDeath', function()
-	IsDead = true
-end)
-
-AddEventHandler('esx:onPlayerSpawn', function(spawn)
-	IsDead = false
-end)
+AddEventHandler('esx:onPlayerDeath', function() IsDead = true end)
+AddEventHandler('esx:onPlayerSpawn', function(spawn) IsDead = false end)
